@@ -14,6 +14,6 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifica
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/public ./public
 
-EXPOSE 3000
+EXPOSE 8080
 ENTRYPOINT ["bun"]
 CMD ["dist/index.js"]
