@@ -4,17 +4,17 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run dev:server & bun run dev:css",
+    "dev": "run-p dev:css dev:server",
     "dev:server": "bun --hot src/server/index.ts",
     "dev:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --watch",
-    "check": "bun run check:lint && bun run check:format && bun run check:types",
-    "check:fix": "bun run check:lint:fix && bun run check:format:write && bun run check:types",
+    "check": "run-s check:lint check:format check:types",
+    "check:fix": "run-s check:lint:fix check:format:write check:types",
     "check:lint": "biome check .",
     "check:lint:fix": "biome check --fix .",
     "check:format": "biome format .",
     "check:format:write": "biome format --write .",
     "check:types": "tsc --noEmit",
-    "build": "bun run build:css && bun run build:server",
+    "build": "run-s build:css build:server",
     "build:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --minify",
     "build:server": "bun build src/server/index.ts --outdir dist",
     "start": "NODE_ENV=production bun dist/index.js"
@@ -22,16 +22,19 @@
   "dependencies": {
     "@prisma/client": "^7.2.0",
     "@tailwindcss/cli": "^4.1.18",
+    "hono": "^4.11.4",
     "prisma": "^7.2.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
     "@types/bun": "latest",
     "@types/react": "^19.2.8",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "npm-run-all": "^4.1.5"
   },
   "peerDependencies": {
     "typescript": "^5"

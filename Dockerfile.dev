@@ -1,0 +1,15 @@
+FROM oven/bun:alpine
+
+ARG PORT
+ENV PORT=$PORT
+
+WORKDIR /app
+
+COPY package.json bun.lock tsconfig.json ./
+RUN bun install
+
+COPY . .
+
+EXPOSE $PORT
+
+CMD ["bun", "run", "dev"]

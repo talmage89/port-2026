@@ -1,29 +1,26 @@
-import { join } from "node:path";
-import { renderPage } from "./render";
+import { Hono } from "hono";
+import { bodyLimit } from "hono/body-limit";
+import { serveStatic } from "hono/bun";
+import { compress } from "hono/compress";
+import { logger } from "hono/logger";
+import { requestId } from "hono/request-id";
+import { secureHeaders } from "hono/secure-headers";
+import { trimTrailingSlash } from "hono/trailing-slash";
+import { Root } from "~/app/root";
+import { envSchema } from "~/utils/env";
 
-const publicDir = join(process.cwd(), "public");
-const cssPath = join(publicDir, "tailwind.css");
+envSchema.parse(process.env);
 
-const server = Bun.serve({
-  port: Number(process.env.PORT ?? 3000),
-  fetch(request) {
-    const url = new URL(request.url);
+const server = new Hono();
 
-    if (url.pathname === "/tailwind.css") {
-      return new Response(Bun.file(cssPath), {
-        headers: {
-          "content-type": "text/css; charset=utf-8",
-          "cache-control": "public, max-age=3600",
-        },
-      });
-    }
+server.use(requestId());
+server.use(logger());
+server.use(trimTrailingSlash());
+server.use(bodyLimit({ maxSize: 1024 * 1024 }));
+server.use(secureHeaders());
+server.use(compress());
 
-    return new Response(renderPage(), {
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-      },
-    });
-  },
-});
+server.use("/*", serveStatic({ root: "./public" }));
+server.get("/", (c) => c.html(Root()));
 
-console.log(`Server running on http://localhost:${server.port}`);
+export default server;
