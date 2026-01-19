@@ -1,0 +1,30 @@
+{
+  "name": "port-2026",
+  "module": "src/server/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run dev:server & bun run dev:css",
+    "dev:server": "bun --hot src/server/index.ts",
+    "dev:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --watch",
+    "build:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --minify",
+    "build": "bun run build:css && bun build src/server/index.ts --outdir dist",
+    "start": "NODE_ENV=production bun dist/index.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.2.0",
+    "@tailwindcss/cli": "^4.1.18",
+    "prisma": "^7.2.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "tailwindcss": "^4.1.18"
+  }
+}
