@@ -1,33 +1,23 @@
 export function ArticlePlaceholder() {
   return (
-    <section className="space-y-6">
-      <div className="space-y-2">
-        <p className="text-black/50 text-xs uppercase tracking-[0.3em]">Today&apos;s Article</p>
-        <h1 className="font-semibold text-3xl leading-tight tracking-tight">
-          A random article will appear here each day.
-        </h1>
-        <p className="text-black/60 text-sm">
-          Source link, summary, and a brief AI take will be shown below.
+    <section className="space-y-5">
+      <h1 className="font-semibold text-4xl leading-tight tracking-tight">
+        The city is redesigning its waterfront for everyday life.
+      </h1>
+      <div className="space-y-4 text-black/70 text-lg leading-relaxed">
+        <p>
+          The plan focuses on making the shoreline feel like a neighborhood street: more shade,
+          safer crossings, and small gathering spots that invite daily use rather than occasional
+          visits.
         </p>
-      </div>
-
-      <div className="space-y-3 rounded-xl border border-black/10 p-5">
-        <div className="font-medium text-sm">Summary</div>
-        <p className="text-black/70 text-sm">
-          A concise, reader-friendly summary will be generated daily.
+        <p>
+          Community feedback guided the layout, with more space for local vendors, quiet seating,
+          and open views that keep the water visible from multiple approaches.
         </p>
-      </div>
-
-      <div className="space-y-3 rounded-xl border border-black/10 p-5">
-        <div className="font-medium text-sm">AI Take</div>
-        <p className="text-black/70 text-sm">
-          A short perspective will provide additional context.
+        <p>
+          Construction is phased to keep access open while upgrades roll out, and the project
+          timeline aims to finish before next summer&apos;s tourist season.
         </p>
-      </div>
-
-      <div className="flex items-center justify-between rounded-xl border border-black/10 p-4 text-sm">
-        <span className="text-black/60">Upvotes</span>
-        <span className="font-medium">0</span>
       </div>
     </section>
   );
