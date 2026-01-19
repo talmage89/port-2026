@@ -12,44 +12,43 @@ jobs:
       - name: Checkout
         uses: https://git.talmage.dev/system/actions-checkout@v1
 
-      - name: Ensure Docker CLI
+      - name: Install Docker and GCloud CLI
         run: |
-          if command -v docker >/dev/null 2>&1; then
-            docker --version
-            exit 0
-          fi
-          if command -v sudo >/dev/null 2>&1; then
-            SUDO="sudo"
-          else
-            SUDO=""
-          fi
-          if command -v apt-get >/dev/null 2>&1; then
-            $SUDO apt-get update
-            $SUDO apt-get install -y docker.io
-          elif command -v apk >/dev/null 2>&1; then
-            $SUDO apk add --no-cache docker-cli
-          else
-            echo "No supported package manager for Docker CLI." >&2
-            exit 1
-          fi
+          apt-get update
+          apt-get install -y docker.io
+          apt-get install -y apt-transport-https ca-certificates gnupg curl
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          apt-get update
+          apt-get install -y google-cloud-cli
+      
+      - name: Authenticate to GCloud
+        env:
+          GCLOUD_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+        run: |
+          echo "$GCLOUD_SERVICE_ACCOUNT_KEY" > /tmp/gcloud-key.json
+          gcloud auth activate-service-account --key-file=/tmp/gcloud-key.json
+
+      - name: Configure Docker for Artifact Registry
+        env:
+          DOCKER_REGISTRY_DOMAIN: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
+        run: |
+          gcloud auth configure-docker "$DOCKER_REGISTRY_DOMAIN" --quiet
 
       - name: Calculate short SHA
         run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
-      - name: Login to registry
-        env:
-          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo "$DOCKER_PASSWORD" | docker login "$DOCKER_REGISTRY" -u "$DOCKER_USERNAME" --password-stdin
-
       - name: Build and push image
         env:
-          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_REGISTRY_DOMAIN: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
+          DOCKER_REGISTRY_PATH: ${{ secrets.DOCKER_REGISTRY_PATH }}
           DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
         run: |
-          IMAGE_REF="${DOCKER_REGISTRY}/${DOCKER_IMAGE}"
+          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${DOCKER_IMAGE}"
           docker build -t "${IMAGE_REF}:sha-${SHA_SHORT}" -t "${IMAGE_REF}:latest" .
           docker push "${IMAGE_REF}:sha-${SHA_SHORT}"
           docker push "${IMAGE_REF}:latest"
+
+      - name: Cleanup gcloud service account key
+        run: |
+          rm -f /tmp/gcloud-key.json
