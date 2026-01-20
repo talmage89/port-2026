@@ -1,7 +1,7 @@
 export function ArticlePlaceholder() {
   return (
-    <section className="space-y-5">
-      <h1 className="font-semibold text-4xl leading-tight tracking-tight">
+    <section className="space-y-8">
+      <h1 className="font-semibold text-3xl leading-tight tracking-tight">
         The city is redesigning its waterfront for everyday life.
       </h1>
       <div className="space-y-4 text-black/70 text-lg leading-relaxed">
