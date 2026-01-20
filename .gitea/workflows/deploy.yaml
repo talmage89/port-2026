@@ -32,8 +32,9 @@ jobs:
         env:
           DOCKER_REGISTRY_DOMAIN: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
           DOCKER_REGISTRY_PATH: ${{ secrets.DOCKER_REGISTRY_PATH }}
+          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
         run: |
-          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${GITHUB_REPOSITORY}"
+          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${DOCKER_IMAGE_NAME}"
           docker build -t "${IMAGE_REF}:sha-${SHA_SHORT}" -t "${IMAGE_REF}:latest" .
           docker push "${IMAGE_REF}:sha-${SHA_SHORT}"
           docker push "${IMAGE_REF}:latest"
@@ -42,11 +43,12 @@ jobs:
         env:
           DOCKER_REGISTRY_DOMAIN: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
           DOCKER_REGISTRY_PATH: ${{ secrets.DOCKER_REGISTRY_PATH }}
-          CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE }}
-          CLOUD_RUN_REGION: ${{ secrets.CLOUD_RUN_REGION }}
+          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
           GCLOUD_PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+          CLOUD_RUN_REGION: ${{ secrets.CLOUD_RUN_REGION }}
+          CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE }}
         run: |
-          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${GITHUB_REPOSITORY}"
+          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${DOCKER_IMAGE_NAME}"
           gcloud run deploy "$CLOUD_RUN_SERVICE" \
             --image "${IMAGE_REF}:latest" \
             --region "$CLOUD_RUN_REGION" \
