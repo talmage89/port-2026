@@ -1,18 +1,4 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - 3000:3000
-    env_file:
-      - .env.local
-    volumes:
-      - .:/app
-      - /app/node_modules
-    depends_on:
-      - db
-
   db:
     image: postgres:alpine
     environment:
