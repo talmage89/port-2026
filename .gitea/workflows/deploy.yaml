@@ -33,7 +33,7 @@ jobs:
           DOCKER_REGISTRY_DOMAIN: ${{ secrets.DOCKER_REGISTRY_DOMAIN }}
           DOCKER_REGISTRY_PATH: ${{ secrets.DOCKER_REGISTRY_PATH }}
         run: |
-          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${GITEA_REPOSITORY_NAME}"
+          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${GITHUB_REPOSITORY}"
           docker build -t "${IMAGE_REF}:sha-${SHA_SHORT}" -t "${IMAGE_REF}:latest" .
           docker push "${IMAGE_REF}:sha-${SHA_SHORT}"
           docker push "${IMAGE_REF}:latest"
@@ -46,7 +46,7 @@ jobs:
           CLOUD_RUN_REGION: ${{ secrets.CLOUD_RUN_REGION }}
           GCLOUD_PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
         run: |
-          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${GITEA_REPOSITORY_NAME}"
+          IMAGE_REF="${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PATH}/${GITHUB_REPOSITORY}"
           gcloud run deploy "$CLOUD_RUN_SERVICE" \
             --image "${IMAGE_REF}:latest" \
             --region "$CLOUD_RUN_REGION" \
