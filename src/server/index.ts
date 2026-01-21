@@ -6,8 +6,8 @@ import { logger } from "hono/logger";
 import { requestId } from "hono/request-id";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
-import { Root } from "~/app/root";
 import { envSchema } from "~/utils/env";
+import { routes } from "./routes";
 
 envSchema.parse(process.env);
 
@@ -21,6 +21,9 @@ server.use(secureHeaders());
 server.use(compress());
 
 server.use("/*", serveStatic({ root: "./public" }));
-server.get("/", (c) => c.html(Root()));
+
+Object.entries(routes).forEach(([path, { get }]) => {
+  server.get(path, get);
+});
 
 export default server;

@@ -11,6 +11,13 @@ jobs:
     steps:
       - name: Checkout
         uses: https://git.talmage.dev/system/actions-checkout@v1
+      
+      - name: Initialize Bun
+        run: |
+          apt update
+          apt install -y unzip
+          curl -fsSL https://bun.com/install | bash
+          bun install --frozen-lockfile
 
       - name: Authenticate to GCloud
         env:
@@ -38,6 +45,12 @@ jobs:
           docker build -t "${IMAGE_REF}:sha-${SHA_SHORT}" -t "${IMAGE_REF}:latest" .
           docker push "${IMAGE_REF}:sha-${SHA_SHORT}"
           docker push "${IMAGE_REF}:latest"
+
+      - name: Run Prisma migrations
+        env: 
+          DB_URL: ${{ secrets.DB_URL }}
+        run: |
+          bunx --bun prisma migrate deploy
 
       - name: Redeploy Cloud Run service
         env:

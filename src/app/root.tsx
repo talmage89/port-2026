@@ -1,6 +1,4 @@
-import { App } from "~/app/app";
-
-export function Root() {
+export function Root({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -11,9 +9,7 @@ export function Root() {
         <link rel="stylesheet" href="/tailwind.css" />
       </head>
       <body>
-        <div id="app">
-          <App />
-        </div>
+        <div id="app">{children}</div>
       </body>
     </html>
   );

@@ -20,10 +20,13 @@
     "start": "NODE_ENV=production bun dist/index.js"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-neon": "^7.2.0",
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@tailwindcss/cli": "^4.1.18",
     "hono": "^4.11.4",
-    "prisma": "^7.2.0",
+    "nanoid": "^5.1.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "tailwindcss": "^4.1.18",
@@ -34,7 +37,10 @@
     "@types/bun": "latest",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
-    "npm-run-all": "^4.1.5"
+    "@types/ws": "^8.18.1",
+    "npm-run-all": "^4.1.5",
+    "prisma": "^7.2.0",
+    "ws": "^8.19.0"
   },
   "peerDependencies": {
     "typescript": "^5"
