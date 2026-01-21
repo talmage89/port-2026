@@ -49,7 +49,7 @@ jobs:
         env: 
           DB_URL: ${{ secrets.DB_URL }}
         run: |
-          bunx --bun prisma migrate deploy
+          bun x --bun prisma migrate deploy
 
       - name: Redeploy Cloud Run service
         env:
