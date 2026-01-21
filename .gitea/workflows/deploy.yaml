@@ -14,8 +14,6 @@ jobs:
       
       - name: Initialize Bun
         run: |
-          apt update
-          apt install -y unzip
           curl -fsSL https://bun.com/install | bash
           source ~/.bashrc
           bun install --frozen-lockfile

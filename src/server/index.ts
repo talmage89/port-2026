@@ -6,10 +6,10 @@ import { logger } from "hono/logger";
 import { requestId } from "hono/request-id";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
-import { envSchema } from "~/utils/env";
+import { env } from "~/utils/env";
 import { routes } from "./routes";
 
-envSchema.parse(process.env);
+env();
 
 const server = new Hono();
 
