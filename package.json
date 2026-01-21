@@ -14,8 +14,9 @@
     "check:format": "biome format .",
     "check:format:write": "biome format --write .",
     "check:types": "tsc --noEmit",
-    "build": "run-s build:css build:server",
+    "build": "run-s build:css build:prisma build:server",
     "build:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --minify",
+    "build:prisma": "bunx --bun prisma generate",
     "build:server": "bun build src/server/index.ts --outdir dist --target bun",
     "start": "NODE_ENV=production bun dist/index.js"
   },
