@@ -15,7 +15,7 @@ jobs:
       - name: Initialize Bun
         run: |
           curl -fsSL https://bun.com/install | bash
-          source ~/.bashrc
+          echo "PATH=$HOME/.bun/bin:$PATH" >> "$GITHUB_ENV"
           bun install --frozen-lockfile
 
       - name: Authenticate to GCloud
@@ -49,7 +49,7 @@ jobs:
         env: 
           DB_URL: ${{ secrets.DB_URL }}
         run: |
-          bun x --bun prisma migrate deploy
+          bunx --bun prisma migrate deploy
 
       - name: Redeploy Cloud Run service
         env:
