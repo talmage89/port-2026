@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "@/prisma/client";
 import type { Article } from "@/prisma/generated/client";
-import { id } from "~/utils/id";
+import { id } from "@/src/platform/utils/id";
 
 const argSchema = z.object({
   title: z.string(),

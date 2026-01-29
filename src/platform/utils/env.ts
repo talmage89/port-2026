@@ -5,5 +5,8 @@ const envSchema = z.object({
   DB_URL: z.string(),
 });
 
-export const env = (): Env => envSchema.parse(process.env);
 export type Env = z.infer<typeof envSchema>;
+
+export const env = (): Env => {
+  return envSchema.parse(process.env);
+};

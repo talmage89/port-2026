@@ -6,8 +6,8 @@ import { logger } from "hono/logger";
 import { requestId } from "hono/request-id";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
-import { env } from "~/utils/env";
-import { routes } from "./routes";
+import { env } from "@/src/platform/utils/env";
+import { routes } from "../routing";
 
 env();
 
@@ -22,8 +22,11 @@ server.use(compress());
 
 server.use("/*", serveStatic({ root: "./public" }));
 
-Object.entries(routes).forEach(([path, { get }]) => {
-  server.get(path, get);
-});
+for (const route of routes) {
+  if (!(route.method in server)) {
+    throw new Error(`Invalid method: ${route.method}`);
+  }
+  server[route.method](route.path, route.handler.bind(route));
+}
 
 export default server;

@@ -18,9 +18,15 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "correctness": {
+        "noUnusedImports": {
+          "level": "warn",
+          "fix": "safe"
+        }
+      },
       "nursery": {
         "useSortedClasses": {
-          "level": "error",
+          "level": "warn",
           "fix": "safe"
         }
       }

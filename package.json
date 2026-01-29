@@ -1,12 +1,12 @@
 {
   "name": "port-2026",
-  "module": "src/server/index.ts",
+  "module": "src/platform/server/index.ts",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "run-p dev:css dev:server",
-    "dev:server": "bun --hot src/server/index.ts",
-    "dev:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --watch --poll",
+    "dev:server": "bun --hot src/platform/server/index.ts",
+    "dev:css": "tailwindcss -i src/platform/styles/tailwind.css -o public/tailwind.css --watch --poll",
     "check": "run-s check:lint check:format check:types",
     "check:fix": "run-s check:lint:fix check:format:write check:types",
     "check:lint": "biome check .",
@@ -15,9 +15,9 @@
     "check:format:write": "biome format --write .",
     "check:types": "tsc --noEmit",
     "build": "run-s build:css build:prisma build:server",
-    "build:css": "tailwindcss -i src/styles/tailwind.css -o public/tailwind.css --minify",
+    "build:css": "tailwindcss -i src/platform/styles/tailwind.css -o public/tailwind.css --minify",
     "build:prisma": "bunx --bun prisma generate",
-    "build:server": "bun build src/server/index.ts --outdir dist --target bun",
+    "build:server": "bun build src/platform/server/index.ts --outdir dist --target bun",
     "start": "NODE_ENV=production bun dist/index.js"
   },
   "dependencies": {
