@@ -1,6 +1,11 @@
 import type { Article as ArticleType } from "@/prisma/generated/client";
 
-export function Article({ article }: { article: ArticleType }) {
+type ArticleProps = {
+  article: ArticleType;
+  hasVoted?: boolean;
+};
+
+export function Article({ article, hasVoted = false }: ArticleProps) {
   return (
     <section className="space-y-8">
       <h1 className="font-bold text-3xl leading-tight tracking-tight">{article.title}</h1>
@@ -17,6 +22,24 @@ export function Article({ article }: { article: ArticleType }) {
       </span>
       <div className="text-lg text-white/70 leading-relaxed">
         <p className="whitespace-pre-wrap">{article.summary}</p>
+      </div>
+      <div className="flex items-center gap-3">
+        <form method="post" action={`/articles/${article.id}/upvote`}>
+          <button
+            type="submit"
+            disabled={hasVoted}
+            className={`inline-flex items-center gap-2 rounded border px-4 py-2 font-medium text-sm transition-colors ${
+              hasVoted
+                ? "cursor-not-allowed border-white/10 text-white/40"
+                : "border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+            }`}
+          >
+            {hasVoted ? "Voted" : "Upvote"}
+          </button>
+        </form>
+        <span className="text-sm text-white/50">
+          {article.upvotes} {article.upvotes === 1 ? "vote" : "votes"}
+        </span>
       </div>
     </section>
   );
