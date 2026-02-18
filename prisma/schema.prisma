@@ -10,12 +10,13 @@ datasource db {
 }
 
 model Article {
-  id        String   @id
-  title     String
-  summary   String
-  link      String
-  upvotes   Int      @default(0)
-  downvotes Int      @default(0)
-  aiTake    String?
-  createdAt DateTime @default(now())
+  id            String    @id
+  title         String
+  summary       String
+  link          String
+  upvotes       Int       @default(0)
+  downvotes     Int       @default(0)
+  aiTake        String?
+  publishedDate DateTime? @unique
+  createdAt     DateTime  @default(now())
 }
