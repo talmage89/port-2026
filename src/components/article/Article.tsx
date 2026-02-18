@@ -23,6 +23,16 @@ export function Article({ article, hasVoted = false }: ArticleProps) {
       <div className="text-lg text-white/70 leading-relaxed">
         <p className="whitespace-pre-wrap">{article.summary}</p>
       </div>
+      {article.aiTake && (
+        <div className="border-blue-400/40 border-l-2 pl-5">
+          <p className="mb-2 font-medium text-white/40 text-xs uppercase tracking-widest">
+            AI Take
+          </p>
+          <p className="whitespace-pre-wrap text-white/70 italic leading-relaxed">
+            {article.aiTake}
+          </p>
+        </div>
+      )}
       <div className="flex items-center gap-3">
         <form method="post" action={`/articles/${article.id}/upvote`}>
           <button
