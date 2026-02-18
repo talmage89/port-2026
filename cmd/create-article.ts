@@ -1,41 +1,43 @@
+import { parseArgs } from "node:util";
 import { z } from "zod";
-import { db } from "@/prisma/client";
-import type { Article } from "@/prisma/generated/client";
-import { id } from "@/src/platform/utils/id";
+import { createArticle } from "@/src/features/articles/repository";
 
-const argSchema = z.object({
-  title: z.string(),
-  summary: z.string(),
-  link: z.string(),
+const flagSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  summary: z.string().min(1, "Summary is required"),
+  link: z.string().url("Link must be a valid URL"),
+  "ai-take": z.string().optional(),
+  date: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return new Date();
+      const parsed = new Date(val);
+      if (Number.isNaN(parsed.getTime())) throw new Error(`Invalid date: ${val}`);
+      return parsed;
+    }),
 });
 
-type Args = z.infer<typeof argSchema>;
+const { values } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    title: { type: "string" },
+    summary: { type: "string" },
+    link: { type: "string" },
+    "ai-take": { type: "string" },
+    date: { type: "string" },
+  },
+});
 
-function parseArgs(): Args {
-  const args = process.argv.slice(2);
-  if (args.length !== Object.keys(argSchema.shape).length) {
-    console.error("Usage: bun cmd/create-article.ts <title> <summary> <link>");
-    process.exit(1);
-  }
+const args = flagSchema.parse(values);
 
-  const [title, summary, link] = args;
-  return argSchema.parse({ title, summary, link });
-}
+const article = await createArticle({
+  title: args.title,
+  summary: args.summary,
+  link: args.link,
+  aiTake: args["ai-take"],
+  publishedDate: args.date,
+});
 
-async function createArticle(args: Args): Promise<Article> {
-  return await db.article.create({
-    data: {
-      id: id(),
-      ...args,
-    },
-  });
-}
-
-async function main() {
-  const args = parseArgs();
-  const article = await createArticle(args);
-  console.log("created article\n");
-  console.log(JSON.stringify(article, null, 2));
-}
-
-await main();
+console.log("created article\n");
+console.log(JSON.stringify(article, null, 2));

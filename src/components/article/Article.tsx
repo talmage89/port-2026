@@ -15,7 +15,7 @@ export function Article({ article }: { article: ArticleType }) {
           {article.link}
         </a>
       </span>
-      <div className="text-white/70 text-lg leading-relaxed">
+      <div className="text-lg text-white/70 leading-relaxed">
         <p className="whitespace-pre-wrap">{article.summary}</p>
       </div>
     </section>
