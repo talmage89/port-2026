@@ -65,3 +65,42 @@ jobs:
       - name: Cleanup gcloud service account key
         run: |
           rm -f /tmp/gcloud-key.json
+
+# -----------------------------------------------------------------------
+# Google Cloud Scheduler Setup (manual, one-time)
+# -----------------------------------------------------------------------
+# The daily article generation is triggered via Cloud Scheduler hitting
+# the POST /admin/generate-daily endpoint on the Cloud Run service.
+#
+# Prerequisites:
+#   - ADMIN_API_KEY env var set on the Cloud Run service
+#   - Cloud Scheduler API enabled in the GCP project
+#
+# Create the scheduler job:
+#   gcloud scheduler jobs create http generate-daily-article \
+#     --location=<CLOUD_RUN_REGION> \
+#     --schedule="0 10 * * *" \
+#     --time-zone="America/Denver" \
+#     --uri="https://<CLOUD_RUN_SERVICE_URL>/admin/generate-daily" \
+#     --http-method=POST \
+#     --headers="Authorization=Bearer <ADMIN_API_KEY>" \
+#     --attempt-deadline=120s \
+#     --project=<GCLOUD_PROJECT_ID>
+#
+# Verify the job:
+#   gcloud scheduler jobs describe generate-daily-article \
+#     --location=<CLOUD_RUN_REGION> \
+#     --project=<GCLOUD_PROJECT_ID>
+#
+# Trigger a manual run:
+#   gcloud scheduler jobs run generate-daily-article \
+#     --location=<CLOUD_RUN_REGION> \
+#     --project=<GCLOUD_PROJECT_ID>
+#
+# Monitoring:
+#   - Cloud Run logs will contain structured JSON entries with
+#     event: "generation.success" or "generation.failure"
+#   - Set up log-based alerts in Cloud Monitoring for generation failures:
+#     resource.type="cloud_run_revision"
+#     jsonPayload.event="generation.failure"
+# -----------------------------------------------------------------------
