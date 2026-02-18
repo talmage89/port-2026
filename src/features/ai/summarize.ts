@@ -32,7 +32,13 @@ Respond with EXACTLY this JSON format, nothing else:
 
   const firstBlock = response.content[0];
   const text = firstBlock?.type === "text" ? firstBlock.text : "";
-  const parsed = JSON.parse(text);
+
+  let parsed: { summary?: string; aiTake?: string };
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error(`Failed to parse AI response as JSON. Raw response: ${text.slice(0, 200)}`);
+  }
 
   if (!parsed.summary || !parsed.aiTake) {
     throw new Error("AI response missing required fields");

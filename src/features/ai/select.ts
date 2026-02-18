@@ -14,6 +14,11 @@ type SelectedArticle = {
 
 export async function selectArticle(): Promise<SelectedArticle> {
   const topStoriesResponse = await fetch("https://hacker-news.firebaseio.com/v0/topstories.json");
+  if (!topStoriesResponse.ok) {
+    throw new Error(
+      `HN API error fetching top stories: ${topStoriesResponse.status} ${topStoriesResponse.statusText}`,
+    );
+  }
   const topStoryIds = (await topStoriesResponse.json()) as number[];
 
   // Take a random sample of 30 stories to check
@@ -23,6 +28,9 @@ export async function selectArticle(): Promise<SelectedArticle> {
   const items = await Promise.all(
     sampleIds.map(async (id) => {
       const res = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`);
+      if (!res.ok) {
+        throw new Error(`HN API error fetching item ${id}: ${res.status} ${res.statusText}`);
+      }
       return res.json() as Promise<HNItem>;
     }),
   );

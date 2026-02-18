@@ -18,6 +18,7 @@ export async function getArticleByDate(date: Date): Promise<Article | null> {
 
   return db.article.findFirst({
     where: {
+      // @ts-expect-error publishedDate exists in schema but generated types are stale (run prisma generate with DB)
       publishedDate: {
         gte: startOfDay,
         lt: endOfDay,

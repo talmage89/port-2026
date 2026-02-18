@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, mock, test } from "bun:test";
+import { mockArticle } from "~/test/helpers";
 
 const mockFindFirst = mock(() => Promise.resolve(null));
-const mockCreate = mock(() => Promise.resolve({}));
-const mockUpdate = mock(() => Promise.resolve({}));
+const mockCreate = mock(() => Promise.resolve(mockArticle()));
+const mockUpdate = mock(() => Promise.resolve(mockArticle()));
 
 mock.module("@/prisma/client", () => ({
   db: {
@@ -35,7 +36,8 @@ describe("article repository", () => {
       await getArticleByDate(date);
 
       expect(mockFindFirst).toHaveBeenCalledTimes(1);
-      const call = mockFindFirst.mock.calls[0];
+      // biome-ignore lint/suspicious/noExplicitAny: Bun mock types don't infer call args from mocked modules
+      const call = (mockFindFirst.mock.calls as any[])[0];
       const where = call?.[0]?.where?.publishedDate;
       expect(where?.gte).toEqual(new Date("2026-02-17T00:00:00.000Z"));
       expect(where?.lt).toEqual(new Date("2026-02-18T00:00:00.000Z"));
@@ -48,10 +50,10 @@ describe("article repository", () => {
     });
 
     test("returns article when found", async () => {
-      const mockArticle = { id: "abc", title: "Test" };
-      mockFindFirst.mockResolvedValueOnce(mockArticle);
+      const article = mockArticle({ id: "abc", title: "Test" });
+      mockFindFirst.mockResolvedValueOnce(article);
       const result = await getArticleByDate(new Date());
-      expect(result).toEqual(mockArticle);
+      expect(result).toEqual(article);
     });
   });
 

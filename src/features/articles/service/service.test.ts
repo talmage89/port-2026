@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, mock, test } from "bun:test";
+import { mockArticle } from "~/test/helpers";
 
 const mockGetArticleByDate = mock(() => Promise.resolve(null));
 const mockGetLatestArticle = mock(() => Promise.resolve(null));
-const mockIncrementUpvotes = mock(() => Promise.resolve({}));
+const mockIncrementUpvotes = mock(() => Promise.resolve(mockArticle()));
 
 mock.module("~/features/articles/repository", () => ({
   getArticleByDate: mockGetArticleByDate,
@@ -21,7 +22,7 @@ describe("article service", () => {
 
   describe("getTodaysArticle", () => {
     test("returns article for today when one exists", async () => {
-      const todayArticle = { id: "today", title: "Today's Article" };
+      const todayArticle = mockArticle({ id: "today", title: "Today's Article" });
       mockGetArticleByDate.mockResolvedValueOnce(todayArticle);
 
       const result = await getTodaysArticle();
@@ -31,7 +32,7 @@ describe("article service", () => {
     });
 
     test("falls back to latest article when none for today", async () => {
-      const latestArticle = { id: "latest", title: "Latest" };
+      const latestArticle = mockArticle({ id: "latest", title: "Latest" });
       mockGetArticleByDate.mockResolvedValueOnce(null);
       mockGetLatestArticle.mockResolvedValueOnce(latestArticle);
 
@@ -50,18 +51,20 @@ describe("article service", () => {
     });
 
     test("passes a Date object to getArticleByDate", async () => {
-      mockGetArticleByDate.mockResolvedValueOnce({ id: "x" });
+      mockGetArticleByDate.mockResolvedValueOnce(mockArticle({ id: "x" }));
       await getTodaysArticle();
 
-      const passedDate = mockGetArticleByDate.mock.calls[0]?.[0];
+      // biome-ignore lint/suspicious/noExplicitAny: Bun mock types don't infer call args from mocked modules
+      const passedDate = (mockGetArticleByDate.mock.calls as any[])[0]?.[0];
       expect(passedDate).toBeInstanceOf(Date);
     });
 
     test("passes a date normalized to UTC midnight", async () => {
-      mockGetArticleByDate.mockResolvedValueOnce({ id: "x" });
+      mockGetArticleByDate.mockResolvedValueOnce(mockArticle({ id: "x" }));
       await getTodaysArticle();
 
-      const passedDate = mockGetArticleByDate.mock.calls[0]?.[0] as Date;
+      // biome-ignore lint/suspicious/noExplicitAny: Bun mock types don't infer call args from mocked modules
+      const passedDate = (mockGetArticleByDate.mock.calls as any[])[0]?.[0] as Date;
       expect(passedDate.getUTCHours()).toBe(0);
       expect(passedDate.getUTCMinutes()).toBe(0);
       expect(passedDate.getUTCSeconds()).toBe(0);
@@ -69,10 +72,11 @@ describe("article service", () => {
     });
 
     test("uses today's UTC date regardless of local time", async () => {
-      mockGetArticleByDate.mockResolvedValueOnce({ id: "x" });
+      mockGetArticleByDate.mockResolvedValueOnce(mockArticle({ id: "x" }));
       await getTodaysArticle();
 
-      const passedDate = mockGetArticleByDate.mock.calls[0]?.[0] as Date;
+      // biome-ignore lint/suspicious/noExplicitAny: Bun mock types don't infer call args from mocked modules
+      const passedDate = (mockGetArticleByDate.mock.calls as any[])[0]?.[0] as Date;
       const now = new Date();
       expect(passedDate.getUTCFullYear()).toBe(now.getUTCFullYear());
       expect(passedDate.getUTCMonth()).toBe(now.getUTCMonth());
@@ -82,7 +86,7 @@ describe("article service", () => {
 
   describe("upvoteArticle", () => {
     test("delegates to incrementUpvotes with article id", async () => {
-      const updated = { id: "abc", upvotes: 5 };
+      const updated = mockArticle({ id: "abc", upvotes: 5 });
       mockIncrementUpvotes.mockResolvedValueOnce(updated);
 
       const result = await upvoteArticle("abc");

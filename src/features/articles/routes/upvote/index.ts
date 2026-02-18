@@ -17,7 +17,15 @@ export class UpvoteRoute implements Route {
 
     try {
       await articleService.upvoteArticle(articleId);
-    } catch {
+    } catch (error) {
+      console.error(
+        JSON.stringify({
+          level: "error",
+          event: "upvote.failed",
+          articleId,
+          error: String(error),
+        }),
+      );
       return c.notFound();
     }
 

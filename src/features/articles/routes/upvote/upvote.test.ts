@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, mock, test } from "bun:test";
 import { Hono } from "hono";
+import { mockArticle } from "~/test/helpers";
 
-const mockUpvoteArticle = mock(() => Promise.resolve({ id: "abc", upvotes: 1 }));
+const mockUpvoteArticle = mock(() => Promise.resolve(mockArticle({ id: "abc", upvotes: 1 })));
 
 mock.module("~/features/articles/service", () => ({
   upvoteArticle: mockUpvoteArticle,

@@ -18,7 +18,9 @@
     "build:css": "tailwindcss -i src/platform/styles/tailwind.css -o public/tailwind.css --minify",
     "build:prisma": "bunx --bun prisma generate",
     "build:server": "bun build src/platform/server/index.ts --outdir dist --target bun",
-    "start": "NODE_ENV=production bun dist/index.js"
+    "start": "NODE_ENV=production bun dist/index.js",
+    "cli:create-article": "bun cmd/create-article.ts",
+    "cli:generate-daily": "bun cmd/generate-daily-article.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.75.0",

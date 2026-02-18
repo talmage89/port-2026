@@ -25,7 +25,21 @@ function stripHtml(html: string): string {
   text = text.replace(/&gt;/g, ">");
   text = text.replace(/&quot;/g, '"');
   text = text.replace(/&#39;/g, "'");
+  text = text.replace(/&apos;/g, "'");
   text = text.replace(/&nbsp;/g, " ");
+  text = text.replace(/&mdash;/g, "\u2014");
+  text = text.replace(/&ndash;/g, "\u2013");
+  text = text.replace(/&hellip;/g, "\u2026");
+  text = text.replace(/&laquo;/g, "\u00AB");
+  text = text.replace(/&raquo;/g, "\u00BB");
+  text = text.replace(/&copy;/g, "\u00A9");
+  text = text.replace(/&reg;/g, "\u00AE");
+  text = text.replace(/&trade;/g, "\u2122");
+  // Decode numeric HTML entities (decimal &#NNN; and hex &#xHHH;)
+  text = text.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
+    String.fromCodePoint(Number.parseInt(hex, 16)),
+  );
+  text = text.replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number.parseInt(dec, 10)));
   // Collapse whitespace
   text = text.replace(/\s+/g, " ").trim();
   return text;
