@@ -16,6 +16,14 @@ export async function getTodaysArticle(): Promise<Article | null> {
   return articleRepository.getLatestArticle();
 }
 
+export async function getArticles(limit = 20, offset = 0): Promise<Article[]> {
+  return articleRepository.getArticles(limit, offset);
+}
+
+export async function getArticleById(id: string): Promise<Article | null> {
+  return articleRepository.getArticleById(id);
+}
+
 export async function upvoteArticle(articleId: string): Promise<Article> {
   return articleRepository.incrementUpvotes(articleId);
 }

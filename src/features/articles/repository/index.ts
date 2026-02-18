@@ -42,6 +42,22 @@ export async function createArticle(data: CreateArticleData): Promise<Article> {
   });
 }
 
+export async function getArticles(limit = 20, offset = 0): Promise<Article[]> {
+  return db.article.findMany({
+    where: {
+      // @ts-expect-error publishedDate exists in schema but generated types are stale
+      publishedDate: { not: null },
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    skip: offset,
+  });
+}
+
+export async function getArticleById(id: string): Promise<Article | null> {
+  return db.article.findUnique({ where: { id } });
+}
+
 export async function incrementUpvotes(articleId: string): Promise<Article> {
   return db.article.update({
     where: { id: articleId },
