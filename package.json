@@ -21,6 +21,7 @@
     "start": "NODE_ENV=production bun dist/index.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.75.0",
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/adapter-neon": "^7.2.0",
     "@prisma/adapter-pg": "^7.2.0",
