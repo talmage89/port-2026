@@ -27,3 +27,7 @@ export async function getArticleById(id: string): Promise<Article | null> {
 export async function upvoteArticle(articleId: string): Promise<Article> {
   return articleRepository.incrementUpvotes(articleId);
 }
+
+export async function downvoteArticle(articleId: string): Promise<Article> {
+  return articleRepository.incrementDownvotes(articleId);
+}

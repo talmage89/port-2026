@@ -64,3 +64,10 @@ export async function incrementUpvotes(articleId: string): Promise<Article> {
     data: { upvotes: { increment: 1 } },
   });
 }
+
+export async function incrementDownvotes(articleId: string): Promise<Article> {
+  return db.article.update({
+    where: { id: articleId },
+    data: { downvotes: { increment: 1 } },
+  });
+}

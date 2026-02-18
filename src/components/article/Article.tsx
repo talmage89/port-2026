@@ -33,23 +33,38 @@ export function Article({ article, hasVoted = false }: ArticleProps) {
           </p>
         </div>
       )}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1">
         <form method="post" action={`/articles/${article.id}/upvote`}>
           <button
             type="submit"
             disabled={hasVoted}
-            className={`inline-flex items-center gap-2 rounded border px-4 py-2 font-medium text-sm transition-colors ${
+            className={`rounded border px-3 py-2 font-medium text-sm transition-colors ${
               hasVoted
                 ? "cursor-not-allowed border-white/10 text-white/40"
                 : "border-white/20 text-white hover:border-white/40 hover:bg-white/10"
             }`}
+            aria-label="Upvote"
           >
-            {hasVoted ? "Voted" : "Upvote"}
+            &#9650;
           </button>
         </form>
-        <span className="text-sm text-white/50">
-          {article.upvotes} {article.upvotes === 1 ? "vote" : "votes"}
+        <span className="min-w-[2rem] text-center text-sm text-white/50">
+          {article.upvotes - article.downvotes}
         </span>
+        <form method="post" action={`/articles/${article.id}/downvote`}>
+          <button
+            type="submit"
+            disabled={hasVoted}
+            className={`rounded border px-3 py-2 font-medium text-sm transition-colors ${
+              hasVoted
+                ? "cursor-not-allowed border-white/10 text-white/40"
+                : "border-white/20 text-white hover:border-white/40 hover:bg-white/10"
+            }`}
+            aria-label="Downvote"
+          >
+            &#9660;
+          </button>
+        </form>
       </div>
     </section>
   );

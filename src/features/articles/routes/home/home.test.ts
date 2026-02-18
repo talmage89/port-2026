@@ -57,7 +57,7 @@ describe("HomeRoute", () => {
 
     expect(res.status).toBe(200);
     const html = await res.text();
-    expect(html).toContain("Voted");
+    expect(html).toContain("cursor-not-allowed");
   });
 
   it("hasVoted=false when no vote cookie", async () => {
@@ -69,7 +69,6 @@ describe("HomeRoute", () => {
 
     expect(res.status).toBe(200);
     const html = await res.text();
-    expect(html).toContain("Upvote");
-    expect(html).not.toContain("Voted");
+    expect(html).not.toContain("cursor-not-allowed");
   });
 });
