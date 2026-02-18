@@ -7,6 +7,7 @@ export function Root({ children }: { children: React.ReactNode }) {
         <link rel="icon" href="/favicon-light.svg" media="(prefers-color-scheme: light)" />
         <link rel="icon" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
         <link rel="stylesheet" href="/tailwind.css" />
+        <link rel="alternate" type="application/rss+xml" title="Pick of the day" href="/feed.xml" />
       </head>
       <body>
         <div id="app">{children}</div>
