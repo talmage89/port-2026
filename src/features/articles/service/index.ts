@@ -1,8 +1,16 @@
 import type { Article } from "@/prisma/generated/client";
 import * as articleRepository from "~/features/articles/repository";
 
+/**
+ * Returns the article published for today, or falls back to the most recent article.
+ *
+ * Daily rotation uses UTC as the reference timezone. The repository normalizes
+ * the date to a UTC day boundary (00:00–23:59 UTC), so all users worldwide see
+ * the same article rotate at midnight UTC.
+ */
 export async function getTodaysArticle(): Promise<Article | null> {
   const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
   const article = await articleRepository.getArticleByDate(today);
   if (article) return article;
   return articleRepository.getLatestArticle();

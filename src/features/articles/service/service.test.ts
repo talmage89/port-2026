@@ -56,6 +56,28 @@ describe("article service", () => {
       const passedDate = mockGetArticleByDate.mock.calls[0]?.[0];
       expect(passedDate).toBeInstanceOf(Date);
     });
+
+    test("passes a date normalized to UTC midnight", async () => {
+      mockGetArticleByDate.mockResolvedValueOnce({ id: "x" });
+      await getTodaysArticle();
+
+      const passedDate = mockGetArticleByDate.mock.calls[0]?.[0] as Date;
+      expect(passedDate.getUTCHours()).toBe(0);
+      expect(passedDate.getUTCMinutes()).toBe(0);
+      expect(passedDate.getUTCSeconds()).toBe(0);
+      expect(passedDate.getUTCMilliseconds()).toBe(0);
+    });
+
+    test("uses today's UTC date regardless of local time", async () => {
+      mockGetArticleByDate.mockResolvedValueOnce({ id: "x" });
+      await getTodaysArticle();
+
+      const passedDate = mockGetArticleByDate.mock.calls[0]?.[0] as Date;
+      const now = new Date();
+      expect(passedDate.getUTCFullYear()).toBe(now.getUTCFullYear());
+      expect(passedDate.getUTCMonth()).toBe(now.getUTCMonth());
+      expect(passedDate.getUTCDate()).toBe(now.getUTCDate());
+    });
   });
 
   describe("upvoteArticle", () => {
