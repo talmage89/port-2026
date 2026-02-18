@@ -16,5 +16,6 @@ model Article {
   link      String
   upvotes   Int      @default(0)
   downvotes Int      @default(0)
+  aiTake    String?
   createdAt DateTime @default(now())
 }
